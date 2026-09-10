@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  --color-ink: #17252c;
+  --color-cream: #f8f4e8;
+  --color-orange: #f26b3a;
+  --color-mint: #bce1cf;
+}
+
+html {
+  background: #f8f4e8;
+}
+
+body {
+  margin: 0;
+  color: #17252c;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}

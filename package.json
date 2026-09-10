@@ -1,0 +1,32 @@
+{
+  "name": "analog-clock-practice",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "latest",
+    "@sveltejs/adapter-auto": "latest",
+    "@sveltejs/kit": "latest",
+    "@sveltejs/vite-plugin-svelte": "latest",
+    "@tailwindcss/vite": "latest",
+    "eslint": "latest",
+    "eslint-plugin-svelte": "latest",
+    "globals": "latest",
+    "prettier": "latest",
+    "prettier-plugin-svelte": "latest",
+    "svelte": "latest",
+    "svelte-check": "latest",
+    "tailwindcss": "latest",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "latest",
+    "vite": "latest"
+  }
+}
