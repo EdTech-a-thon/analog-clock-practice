@@ -1,18 +1,50 @@
 <script lang="ts">
+  import { formatTime } from "$lib/domain/time";
   import { handAngles } from "$lib/domain/angles";
   import type { ClockTime } from "$lib/domain/types";
 
   type Props = {
     time: ClockTime;
+    answer?: ClockTime | null;
     /** Highlights one hand after a miss, so the correction points at something. */
     annotate?: "hour" | "minute" | null;
     /** Line art for print: no fills, no shadow. */
     plain?: boolean;
   };
 
-  let { time, annotate = null, plain = false }: Props = $props();
+  let { time, answer = null, annotate = null, plain = false }: Props = $props();
 
   const angles = $derived(handAngles(time));
+
+  const comparison = $derived(answer && !plain ? answer : null);
+  const answerAngles = $derived(comparison ? handAngles(comparison) : angles);
+  const hands = $derived([
+    {
+      name: "minute",
+      radius: 75,
+      width: 4,
+      correct: angles.minute,
+      chosen: answerAngles.minute,
+      matches: comparison?.minute === time.minute,
+    },
+    {
+      name: "hour",
+      radius: 45,
+      width: 7,
+      correct: angles.hour,
+      chosen: answerAngles.hour,
+      matches: comparison?.hour === time.hour,
+    },
+  ]);
+
+  function wedge(from: number, to: number, radius: number): string {
+    const delta = ((to - from + 540) % 360) - 180;
+    const point = (angle: number) => {
+      const radians = (angle * Math.PI) / 180;
+      return `${100 + Math.sin(radians) * radius} ${100 - Math.cos(radians) * radius}`;
+    };
+    return `M 100 100 L ${point(from)} A ${radius} ${radius} 0 0 ${delta >= 0 ? 1 : 0} ${point(from + delta)} Z`;
+  }
 
   const ticks = Array.from({ length: 60 }, (_, index) => ({
     rotation: index * 6,
@@ -57,7 +89,9 @@
   viewBox="0 0 200 200"
   class="block h-auto w-full"
   role="img"
-  aria-label={describe(time)}
+  aria-label={comparison
+    ? `Your answer: ${formatTime(comparison)}. Correct time: ${formatTime(time)}. Hour ${comparison.hour === time.hour ? "correct" : "incorrect"}. Minutes ${comparison.minute === time.minute ? "correct" : "incorrect"}. Colored hands show your answer; black hands show the correct positions.`
+    : describe(time)}
 >
   <circle
     cx="100"
@@ -67,6 +101,18 @@
     stroke="#111111"
     stroke-width={plain ? 2.5 : 9}
   />
+
+  {#if comparison}
+    {#each hands as hand (hand.name)}
+      {#if !hand.matches}
+        <path
+          d={wedge(hand.chosen, hand.correct, hand.radius)}
+          fill="#c2410c"
+          fill-opacity="0.12"
+        />
+      {/if}
+    {/each}
+  {/if}
 
   {#each ticks as tick (tick.rotation)}
     <line
@@ -94,29 +140,56 @@
     >
   {/each}
 
-  <!-- Minute hand: long and thin. Drawn first so the hour hand sits on top. -->
-  <line
-    x1="100"
-    y1="108"
-    x2="100"
-    y2="25"
-    stroke={annotate === "minute" ? "#f26b3a" : "#111111"}
-    stroke-width={annotate === "minute" ? 6 : 4}
-    stroke-linecap="round"
-    transform="rotate({angles.minute} 100 100)"
-  />
+  {#if comparison}
+    {#each hands as hand (hand.name)}
+      {#if hand.chosen !== hand.correct}
+        <line
+          x1="100"
+          y1="100"
+          x2="100"
+          y2={100 - hand.radius}
+          stroke="#111111"
+          stroke-width={hand.width}
+          stroke-linecap="round"
+          transform="rotate({hand.correct} 100 100)"
+        />
+      {/if}
+      <line
+        x1="100"
+        y1="106"
+        x2="100"
+        y2={100 - hand.radius}
+        stroke={hand.matches ? "#0369a1" : "#c2410c"}
+        stroke-width={hand.width}
+        stroke-linecap="round"
+        transform="rotate({hand.chosen} 100 100)"
+      />
+    {/each}
+  {:else}
+    <!-- Minute hand: long and thin. Drawn first so the hour hand sits on top. -->
+    <line
+      x1="100"
+      y1="108"
+      x2="100"
+      y2="25"
+      stroke={annotate === "minute" ? "#f26b3a" : "#111111"}
+      stroke-width={annotate === "minute" ? 6 : 4}
+      stroke-linecap="round"
+      transform="rotate({angles.minute} 100 100)"
+    />
 
-  <!-- Hour hand: short and thick, and never parked on the numeral. -->
-  <line
-    x1="100"
-    y1="107"
-    x2="100"
-    y2="55"
-    stroke={annotate === "hour" ? "#f26b3a" : "#111111"}
-    stroke-width={annotate === "hour" ? 9 : 7}
-    stroke-linecap="round"
-    transform="rotate({angles.hour} 100 100)"
-  />
+    <!-- Hour hand: short and thick, and never parked on the numeral. -->
+    <line
+      x1="100"
+      y1="107"
+      x2="100"
+      y2="55"
+      stroke={annotate === "hour" ? "#f26b3a" : "#111111"}
+      stroke-width={annotate === "hour" ? 9 : 7}
+      stroke-linecap="round"
+      transform="rotate({angles.hour} 100 100)"
+    />
+  {/if}
 
   <circle cx="100" cy="100" r="4.5" fill="#111111" />
 </svg>

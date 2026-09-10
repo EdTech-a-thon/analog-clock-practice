@@ -66,11 +66,6 @@
   const rightSoFar = $derived(answers.filter((answer) => answer.correct).length);
   const missed = $derived(answers.filter((answer) => !answer.correct));
 
-  /** Point at the hand the student misread. */
-  function annotationFor(kind: DistractorKind | null): 'hour' | 'minute' {
-    return kind === 'hour-slip' || kind === 'swapped-hands' ? 'hour' : 'minute';
-  }
-
   function start(): void {
     round = buildRound(level, length, () => Math.random());
     index = 0;
@@ -245,6 +240,23 @@
                 <p class="text-2xl font-bold text-ink">Yes — {formatTime(question.time)}</p>
               {:else}
                 <div class="rounded-3xl border-2 border-orange/35 bg-white p-5 text-left">
+                  {#if picked}
+                    {#if question.direction === 'time-to-clock'}
+                      <div class="mx-auto mb-4 w-56 max-w-full">
+                        <ClockFace time={question.time} answer={picked} />
+                      </div>
+                    {/if}
+                    <p class="mb-3 text-xl font-bold tabular-nums">
+                      Your answer:
+                      <span class="relative inline-block pt-4 {picked.hour === question.time.hour ? 'text-sky-700' : 'text-orange-700'}">
+                        <span class="sr-only">Hour: </span>{picked.hour}<sup class="absolute inset-x-0 top-0 text-center text-xs leading-none" aria-hidden="true">{picked.hour === question.time.hour ? '✓' : '✗'}</sup>
+                        <span class="sr-only">{picked.hour === question.time.hour ? 'correct' : 'incorrect'}</span>
+                      </span>:<span class="relative inline-block pt-4 {picked.minute === question.time.minute ? 'text-sky-700' : 'text-orange-700'}">
+                        <span class="sr-only">Minutes: </span>{String(picked.minute).padStart(2, '0')}<sup class="absolute inset-x-0 top-0 text-center text-xs leading-none" aria-hidden="true">{picked.minute === question.time.minute ? '✓' : '✗'}</sup>
+                        <span class="sr-only">{picked.minute === question.time.minute ? 'correct' : 'incorrect'}</span>
+                      </span>
+                    </p>
+                  {/if}
                   <p class="text-lg leading-relaxed font-medium text-ink">
                     {explain(wrongKind, question.time)}
                   </p>
@@ -272,7 +284,7 @@
             <div class="mx-auto w-full max-w-[min(46vh,22rem)]">
               <ClockFace
                 time={question.time}
-                annotate={phase === 'checking' && !wasCorrect ? annotationFor(wrongKind) : null}
+                answer={phase === 'checking' && !wasCorrect ? picked : null}
               />
             </div>
 

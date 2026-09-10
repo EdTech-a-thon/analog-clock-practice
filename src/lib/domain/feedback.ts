@@ -30,52 +30,32 @@ function nextHour(hour: number): number {
   return (hour % 12) + 1;
 }
 
-/**
- * The correction a student reads after a miss. Short sentences, name the hand,
- * state the rule, then give the answer — in that order, because the answer is
- * the least useful part.
- */
+/** Explain the relevant hands using the numbers on this Question's Clock Face. */
 export function explain(kind: DistractorKind | null, time: ClockTime): string {
   const answer = `The time is ${formatTime(time)}.`;
+  const hourAdvice =
+    time.minute === 0
+      ? `The short hand points to ${time.hour}, so the hour is ${time.hour}.`
+      : `The short hand is between ${time.hour} and ${nextHour(time.hour)}. It has passed ${time.hour}, so the hour is still ${time.hour}.`;
 
-  if (kind === "hour-and-minute") {
-    const minuteAdvice =
-      time.minute % 5 === 0
-        ? "Count by fives to where the long minute hand points."
-        : "Find the nearest number below the long minute hand, then count the small ticks past it one at a time.";
-    return (
-      `Check both hands. Read the hour from the short hand, using the number ` +
-      `it has reached or most recently passed. ${minuteAdvice} ${answer}`
-    );
+  let minuteAdvice: string;
+  if (time.minute === 0) {
+    minuteAdvice = "The long minute hand points to 12. That means 00 minutes.";
+  } else if (time.minute % 5 === 0) {
+    minuteAdvice = `The long minute hand points to ${time.minute / 5}. Each number is 5 minutes, so count by fives from 12 to get ${time.minute} minutes.`;
+  } else {
+    const wholeFives = Math.floor(time.minute / 5);
+    const ticks = time.minute % 5;
+    const startNumber = wholeFives === 0 ? 12 : wholeFives;
+    minuteAdvice = `The long minute hand is ${ticks} small ${ticks === 1 ? "tick" : "ticks"} past ${startNumber}. Start at ${wholeFives * 5} minutes and count the small ticks: add ${ticks} to get ${time.minute} minutes.`;
   }
 
-  if (kind === "hour-slip") {
-    if (time.minute === 0) {
-      return `Look at the short hour hand. It points to ${time.hour}, so the hour is ${time.hour}. ${answer}`;
-    }
-    return (
-      `Look at the hour hand. It is between the ${time.hour} and the ` +
-      `${nextHour(time.hour)}, and it has not reached the ${nextHour(time.hour)} ` +
-      `yet. The hour is still ${time.hour}. ${answer}`
-    );
-  }
-
+  if (kind === "hour-slip") return `${hourAdvice} ${answer}`;
   if (kind === "swapped-hands") {
-    return (
-      `Check which hand is which. The short hand is the hour hand and the long ` +
-      `hand is the minute hand. Read the hour from the short one. ${answer}`
-    );
+    return `The short hand shows the hour; the long hand shows the minutes. ${hourAdvice} ${minuteAdvice} ${answer}`;
   }
-
-  // Advice has to suit the time being read, not just the mistake made: telling
-  // a student to count by fives towards 6:28 sends them somewhere fives can
-  // never reach. Any time off the five-minute marks needs tick counting.
-  if (kind === "off-by-tick" || time.minute % 5 !== 0) {
-    return (
-      `Find the nearest number below the minute hand, then count the small ` +
-      `ticks past it one at a time. ${answer}`
-    );
+  if (kind === "hour-and-minute" || kind === null) {
+    return `${hourAdvice} ${minuteAdvice} ${answer}`;
   }
-
-  return `Count around the clock by fives to where the minute hand points. ${answer}`;
+  return `${minuteAdvice} ${answer}`;
 }
