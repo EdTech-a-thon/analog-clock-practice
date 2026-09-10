@@ -128,7 +128,7 @@
       return;
     }
     if (!Number.isInteger(minute) || minute < 0 || minute > 59) {
-      inputProblem = 'The minutes need to be a number from 0 to 59.';
+      inputProblem = 'The minutes need to be a number from 00 to 59.';
       return;
     }
     inputProblem = null;

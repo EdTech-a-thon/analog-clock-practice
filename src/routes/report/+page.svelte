@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { resolve } from '$app/paths';
   import ClockFace from '$lib/components/ClockFace.svelte';
+  import Header from '$lib/components/Header.svelte';
   import { formatTime } from '$lib/domain/time';
   import type { Direction, Level } from '$lib/domain/types';
   import {
@@ -72,14 +73,15 @@
   <title>Practice report — Clock Literacy</title>
 </svelte:head>
 
-<main class="min-h-screen bg-cream px-5 py-8 text-ink sm:px-8 print:bg-white print:p-0">
-  <div class="mx-auto max-w-3xl">
-    <div class="no-print mb-6 flex items-center justify-between border-b border-ink/12 pb-4">
-      <a href={resolve('/')} class="font-semibold tracking-tight">Clock Literacy</a>
+<main class="min-h-screen bg-cream px-5 py-5 text-ink sm:px-8 lg:px-12 print:bg-white print:p-0">
+  <div class="no-print mx-auto mb-6 max-w-7xl">
+    <Header>
       <a href={resolve('/practice')} class="text-sm font-semibold text-ink/60 hover:text-ink">
         Back to practice
       </a>
-    </div>
+    </Header>
+  </div>
+  <div class="mx-auto max-w-3xl">
 
     {#if !loaded}
       <p class="text-ink/60">Loading your round…</p>
@@ -109,9 +111,6 @@
           placeholder="Type your name"
           bind:value={name}
         />
-        <p class="mt-2 text-sm text-ink/55">
-          Check this is you — this device may have been used by someone else.
-        </p>
 
         {#if earlier}
           <div class="mt-5 flex flex-wrap gap-2 border-t border-ink/10 pt-4">
