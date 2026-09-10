@@ -3,6 +3,7 @@ out
 dist
 .svelte-kit/
 *.local
+.vercel/
 
 # dotenv environment variable files
 .env
