@@ -97,15 +97,9 @@
       advanceTimer = setTimeout(advance, 1100);
       return;
     }
-    // On a phone the correction sits below the fold. Bring it to the student
-    // rather than making them go looking for it.
     tick().then(() => {
-      document.querySelector('[data-correction]')?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
       // The pressed option is now disabled, so focus would otherwise be lost.
-      document.querySelector<HTMLButtonElement>('[data-continue]')?.focus();
+      document.querySelector<HTMLButtonElement>('[data-continue]')?.focus({ preventScroll: true });
     });
   }
 
@@ -231,17 +225,14 @@
         </div>
       </section>
     {:else if question && (phase === 'asking' || phase === 'checking')}
-      <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center py-4">
+      <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col py-4">
         {#snippet correction()}
           {#if phase === 'checking' && question}
             <div class="mt-5 w-full text-center" role="status" aria-live="polite">
               {#if wasCorrect}
                 <p class="text-2xl font-bold text-ink">Yes — {formatTime(question.time)}</p>
               {:else}
-                <div
-                  data-correction
-                  class="rounded-3xl border-2 border-orange/35 bg-white p-5 text-left"
-                >
+                <div class="rounded-3xl border-2 border-orange/35 bg-white p-5 text-left">
                   <p class="text-lg leading-relaxed font-medium text-ink">
                     {explain(wrongKind, question.time)}
                   </p>
@@ -264,8 +255,7 @@
         {#if question.direction === 'clock-to-time'}
           <h1 class="text-center text-2xl font-semibold sm:text-3xl">What time is it?</h1>
 
-          <!-- Side by side once there is room, so the correction and its
-               continue button never fall below the fold on a laptop. -->
+          <!-- Keep feedback outside the centered grid so answers stay in place. -->
           <div class="mx-auto mt-4 grid w-full max-w-4xl items-center gap-6 lg:grid-cols-2 lg:gap-10">
             <div class="mx-auto w-full max-w-[min(46vh,22rem)]">
               <ClockFace
@@ -306,8 +296,6 @@
                   </p>
                 {/if}
               {/if}
-
-              {@render correction()}
             </div>
           </div>
         {:else}
@@ -334,11 +322,11 @@
               </button>
             {/each}
           </div>
-
-          <div class="mx-auto w-full max-w-2xl">
-            {@render correction()}
-          </div>
         {/if}
+
+        <div class="mx-auto w-full max-w-2xl">
+          {@render correction()}
+        </div>
       </section>
     {:else if phase === 'results'}
       <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center py-10">
