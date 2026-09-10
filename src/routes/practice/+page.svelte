@@ -244,7 +244,7 @@
     <Header>
       {#if phase === 'asking' || phase === 'checking'}
         <p class="text-sm font-semibold text-ink/60 tabular-nums">
-          {index + 1} of {round?.questions.length} · {rightSoFar} right
+          Question {index + 1} of {round?.questions.length}
         </p>
       {/if}
     </Header>
