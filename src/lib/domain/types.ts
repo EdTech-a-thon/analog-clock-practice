@@ -1,8 +1,5 @@
-/** A time as an analog dial can express it: no date, no meridiem, no seconds. */
+/** A time as an analog dial can express it: hours and minutes only. */
 export type ClockTime = { hour: number; minute: number };
-
-/** Whether a Question's time is AM or PM. Context only; nothing depends on it. */
-export type Meridiem = "AM" | "PM";
 
 export type Level = "easy" | "medium" | "hard";
 
@@ -24,7 +21,6 @@ export type Option = { time: ClockTime; kind: "correct" | DistractorKind };
 
 export type Question = {
   time: ClockTime;
-  meridiem: Meridiem;
   direction: Direction;
   /** Null when the student types the answer instead of choosing it. */
   options: Option[] | null;

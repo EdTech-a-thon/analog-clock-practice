@@ -41,12 +41,6 @@ the one it has left — 4:45 for a clock reading 3:45. The misconception the too
 exists to correct.
 _Avoid_: off-by-one, hour error
 
-**Meridiem**:
-Whether a Question's time is AM or PM. Shown above and to the right of the Clock
-Face so that every time a student reads carries one. Context only: it is never
-entered, never read off the dial, and no Question depends on it.
-_Avoid_: period (a period is a slot in the school day), am/pm, time of day
-
 **Practice Report**:
 The printable summary a student takes to their teacher, covering the Round they
 just finished and carrying the name they typed.

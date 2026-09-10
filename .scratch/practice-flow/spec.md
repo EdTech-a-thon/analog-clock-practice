@@ -84,60 +84,56 @@ account is ever created.
 23. As a student, I want the hour hand to sit correctly between the numbers as
     the hour progresses, so that I am learning to read real clocks and not a
     simplified fiction.
-24. As a student, I want to see an AM or PM label beside every clock, so that a
-    time always arrives attached to a part of the day.
-25. As a student, I do not want to have to decide or enter whether a time is AM
-    or PM, so that I am never asked to guess something the dial cannot tell me.
-26. As a student, I want no time limit or countdown, so that I can think.
-27. As a student, I want no repeated times within a Round, so that practice
+24. As a student, I want no time limit or countdown, so that I can think.
+25. As a student, I want no repeated times within a Round, so that practice
     covers ground rather than circling.
-28. As a student, I want a results screen with my score, so that I know how I
+26. As a student, I want a results screen with my score, so that I know how I
     did.
-29. As a student, I want the Questions I missed redrawn on the results screen,
+27. As a student, I want the Questions I missed redrawn on the results screen,
     so that I can review my mistakes together at the end.
-30. As a student, I want to start another Round in one click, so that practicing
+28. As a student, I want to start another Round in one click, so that practicing
     twice is easy.
-31. As a student, I want to type my name when I print, so that my teacher knows
+29. As a student, I want to type my name when I print, so that my teacher knows
     whose work it is.
-32. As a student, I want my name remembered next time, so that I am not retyping
+30. As a student, I want my name remembered next time, so that I am not retyping
     it every session.
-33. As a student on a shared device, I want the remembered name shown in an
+31. As a student on a shared device, I want the remembered name shown in an
     editable box when I print, so that I notice and fix it when it belongs to
     whoever used this Chromebook before me.
-34. As a student, I want to print a one-page Practice Report, so that I have
+32. As a student, I want to print a one-page Practice Report, so that I have
     something physical to hand in.
-35. As a student, I want the Practice Report to redraw the clocks I got wrong,
+33. As a student, I want the Practice Report to redraw the clocks I got wrong,
     so that my teacher can see what confused me rather than just that I was
     wrong.
-36. As a student, I want a Save as PDF option through the normal print dialog,
+34. As a student, I want a Save as PDF option through the normal print dialog,
     so that I can send the file instead of printing paper.
-37. As a student who started a new Round before printing the last one, I want to
+35. As a student who started a new Round before printing the last one, I want to
     be offered the earlier Round to print, so that my work is not lost by a
     stray click.
-38. As a student, I do not want to create an account or log in, so that I can
+36. As a student, I do not want to create an account or log in, so that I can
     start practicing in one click.
-39. As a student on a phone, I want the four candidate clocks in a 2x2 grid, so
+37. As a student on a phone, I want the four candidate clocks in a 2x2 grid, so
     that I can see all four at once and compare them.
-40. As a student on a phone, I do not want to scroll to see the fourth clock, so
+38. As a student on a phone, I do not want to scroll to see the fourth clock, so
     that comparison is possible at all.
-41. As a student using a screen reader, I want the Clock Face described by where
+39. As a student using a screen reader, I want the Clock Face described by where
     its hands point rather than by the time it shows, so that the exercise is
     still an exercise.
-42. As a student at a whiteboard, I want the clock and controls to scale up, so
+40. As a student at a whiteboard, I want the clock and controls to scale up, so
     that the class can see what I am doing.
-43. As a teacher, I want to tell my class to do a specific Level, so that the
+41. As a teacher, I want to tell my class to do a specific Level, so that the
     whole room is practicing the same thing.
-44. As a teacher, I want to hand out a link that opens straight to a Level, so
+42. As a teacher, I want to hand out a link that opens straight to a Level, so
     that I do not spend the first five minutes on setup instructions.
-45. As a teacher, I want the Practice Report to carry the student's name, the
+43. As a teacher, I want the Practice Report to carry the student's name, the
     date, the Level and the score, so that it works as evidence of practice.
-46. As a teacher, I want the Practice Report to fit one page, so that collecting
+44. As a teacher, I want the Practice Report to fit one page, so that collecting
     thirty of them is manageable.
-47. As a teacher, I want no student data to leave the device, so that I do not
+45. As a teacher, I want no student data to leave the device, so that I do not
     have to think about privacy paperwork.
-48. As a teacher, I want nothing to administer, so that using this costs me no
+46. As a teacher, I want nothing to administer, so that using this costs me no
     setup time.
-49. As a teacher, I want the tool to work on Chromebooks, iPads, phones and the
+47. As a teacher, I want the tool to work on Chromebooks, iPads, phones and the
     classroom whiteboard, so that it works with whatever my room has that day.
 
 ## Implementation Decisions
@@ -153,16 +149,6 @@ The Clock Face is identical at every Level: twelve hour numerals, sixty minute
 ticks, no outer minute numbers, ever. There is no scaffolding toggle. This is a
 reversal of an earlier design that varied the dial by Level, and it means the
 feedback text carries all of the teaching load.
-
-### Meridiem
-
-Every Question carries a Meridiem, chosen at random per Question, displayed
-above and to the right of the Clock Face. It is context only. No Question
-depends on it, it is never entered, and it is never a Distractor dimension. In
-the Time-to-Clock Direction a single Meridiem label sits above the group of four
-candidate clocks rather than one label per clock, so that it can never be used
-to eliminate an option without reading a dial. It is styled as a quiet label
-rather than a control so that students do not hunt for something to do with it.
 
 ### Hand geometry
 
@@ -292,7 +278,6 @@ against SVG structure, which is a second seam bought mostly in brittleness.
 - Long-term progress history. Only the last two Rounds survive.
 - Minute numbers printed outside the dial, or any scaffolding that varies the
   Clock Face by Level.
-- Asking the student to determine or enter AM or PM.
 - A whiteboard presentation mode that hides answers until the teacher reveals
   them. Deferred pending confirmation of how the whiteboard is actually used.
 - 24-hour times, worded times such as "quarter past three", elapsed-time

@@ -62,7 +62,6 @@ export function buildRound(level: Level, length: RoundLength, rng: Rng): Round {
     const typed = level === "hard" && direction === "clock-to-time";
     return {
       time,
-      meridiem: rng() < 0.5 ? "AM" : "PM",
       direction,
       options: typed ? null : buildOptions(time, level, rng),
     };

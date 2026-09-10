@@ -1,8 +1,7 @@
-import type { ClockTime, Direction, Level, Meridiem } from "./domain/types";
+import type { ClockTime, Direction, Level } from "./domain/types";
 
 export type AnsweredQuestion = {
   time: ClockTime;
-  meridiem: Meridiem;
   direction: Direction;
   /** What the student picked or typed. Null only if a Round was abandoned. */
   answer: ClockTime | null;

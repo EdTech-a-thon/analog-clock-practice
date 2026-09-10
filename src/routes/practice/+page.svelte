@@ -54,10 +54,6 @@
   const rightSoFar = $derived(answers.filter((answer) => answer.correct).length);
   const missed = $derived(answers.filter((answer) => !answer.correct));
 
-  function meridiemLabel(meridiem: 'AM' | 'PM'): string {
-    return meridiem === 'AM' ? 'Morning · AM' : 'Afternoon · PM';
-  }
-
   /** Point at the hand the student misread. */
   function annotationFor(kind: DistractorKind | null): 'hour' | 'minute' {
     return kind === 'hour-slip' || kind === 'swapped-hands' ? 'hour' : 'minute';
@@ -88,7 +84,6 @@
       ...answers,
       {
         time: question.time,
-        meridiem: question.meridiem,
         direction: question.direction,
         answer,
         correct
@@ -273,9 +268,6 @@
                continue button never fall below the fold on a laptop. -->
           <div class="mx-auto mt-4 grid w-full max-w-4xl items-center gap-6 lg:grid-cols-2 lg:gap-10">
             <div class="mx-auto w-full max-w-[min(46vh,22rem)]">
-              <p class="mb-2 text-right text-sm font-semibold tracking-wide text-ink/55">
-                {meridiemLabel(question.meridiem)}
-              </p>
               <ClockFace
                 time={question.time}
                 annotate={phase === 'checking' && !wasCorrect ? annotationFor(wrongKind) : null}
@@ -323,9 +315,6 @@
             Which clock shows
             <span class="text-orange tabular-nums">{formatTime(question.time)}</span>?
           </h1>
-          <p class="mt-2 text-center text-sm font-semibold tracking-wide text-ink/55">
-            {meridiemLabel(question.meridiem)}
-          </p>
 
           <div class="mx-auto mt-5 grid w-full max-w-3xl grid-cols-2 gap-4 md:grid-cols-4">
             {#each question.options ?? [] as option, position (optionLabel(option))}
