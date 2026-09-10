@@ -20,5 +20,5 @@ export default tseslint.config(
       globals: { ...globals.browser, ...globals.node },
     },
   },
-  { ignores: [".svelte-kit/", "build/"] },
+  { ignores: [".svelte-kit/", "build/", ".vercel/", "dist/"] },
 );

@@ -15,3 +15,13 @@ This project was created as a prototype during the 3-day "EdTech-a-thon" event b
 - UI / Styling: Tailwind CSS
 - UI Rendering Method: Prefer DOM elements over canvas when possible for the sake of accessibility, using canvas only when it is unreasonable not to
 - Data & Persistence: Follow this hierarchy — no data, then `localStorage`, then Pocketbase using the pocketbase conventions only if real accounts or shared persistence are strictly necessary
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live as markdown files under `.scratch/`, one directory per feature. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.

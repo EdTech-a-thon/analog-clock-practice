@@ -9,11 +9,12 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@eslint/js": "latest",
-    "@sveltejs/adapter-auto": "latest",
+    "@sveltejs/adapter-vercel": "^6.3.4",
     "@sveltejs/kit": "latest",
     "@sveltejs/vite-plugin-svelte": "latest",
     "@tailwindcss/vite": "latest",
@@ -27,6 +28,7 @@
     "tailwindcss": "latest",
     "typescript": "~5.9.3",
     "typescript-eslint": "latest",
-    "vite": "latest"
+    "vite": "latest",
+    "vitest": "^5.0.0"
   }
 }
