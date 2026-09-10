@@ -11,6 +11,7 @@ export type Direction = "clock-to-time" | "time-to-clock";
  * each gets its own wording in the feedback.
  */
 export type DistractorKind =
+  | "hour-and-minute"
   | "hour-slip"
   | "swapped-hands"
   | "off-by-five"

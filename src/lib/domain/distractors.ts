@@ -1,5 +1,5 @@
-import { minutesForLevel, randomTime } from "./time";
-import type { ClockTime, DistractorKind, Level, Option, Rng } from "./types";
+import { minutesForLevel, pick } from "./time";
+import type { ClockTime, Level, Option, Rng } from "./types";
 
 /**
  * Pull a minute onto the Level's own grid. Every option a student sees has to
@@ -42,81 +42,41 @@ export function swappedHands(time: ClockTime, level: Level): ClockTime {
 }
 
 /**
- * Miscounts: by quarters at Easy, by fives above it.
- *
- * Hard offers choices only in the Time-to-Clock Direction, where options are
- * drawn as four dials rather than listed as text. Separating them by a single
- * tick would put them six degrees apart and make the question a coin flip, so
- * Hard uses the same five-minute spread as Medium — its difficulty comes from
- * the correct time sitting between the ticks, not from the gaps being
- * invisible. A single-tick error is still recognised when a student types one;
- * it is just never offered as a clock to pick.
- */
-function miscounts(
-  time: ClockTime,
-  level: Level,
-): { time: ClockTime; kind: DistractorKind }[] {
-  if (level === "easy") {
-    return minutesForLevel("easy")
-      .filter((minute) => minute !== time.minute)
-      .map((minute) => ({
-        time: { hour: time.hour, minute },
-        kind: "other-quarter" as const,
-      }));
-  }
-  return [5, -5, 10, -10].map((offset) => ({
-    time: { hour: time.hour, minute: snap(time.minute + offset, level) },
-    kind: "off-by-five" as const,
-  }));
-}
-
-/**
- * Two options are too close to offer together when they share an hour and sit
- * within a few minutes of each other: as text they invite a coin flip, and as
- * two dials they are the same picture. Swapped hands lands here often at Hard —
- * 3:17 reads back as 3:16 — so it gets dropped rather than shown.
- */
-function tooClose(a: ClockTime, b: ClockTime): boolean {
-  if (a.hour !== b.hour) return false;
-  const gap = Math.abs(a.minute - b.minute);
-  return Math.min(gap, 60 - gap) < 5;
-}
-
-/**
- * Four options, one correct. The Hour Slip is offered first whenever the minute
- * hand is past the six, because that is exactly when the hour hand appears to
- * be pointing at the next numeral.
+ * Pair two hours with two minutes so neither hand can be inferred from how
+ * often its value appears. Keep the Hour Slip in every Question.
+ * Easy stays on quarter hours. Medium and Hard use five- or ten-minute gaps
+ * so the Clock Faces remain visually distinct, even between ticks at Hard.
  */
 export function buildOptions(
   time: ClockTime,
   level: Level,
   rng: Rng,
 ): Option[] {
-  const candidates: { time: ClockTime; kind: DistractorKind }[] = [];
-  if (time.minute > 30)
-    candidates.push({ time: hourSlip(time), kind: "hour-slip" });
-  candidates.push({ time: swappedHands(time, level), kind: "swapped-hands" });
-  candidates.push(...miscounts(time, level));
+  const otherMinute =
+    level === "easy"
+      ? pick(
+          minutesForLevel(level).filter((minute) => minute !== time.minute),
+          rng,
+        )
+      : snap(time.minute + pick([-10, -5, 5, 10], rng), level);
+  return shuffleOptions(
+    [
+      { time, kind: "correct" },
+      { time: hourSlip(time), kind: "hour-slip" },
+      {
+        time: { hour: time.hour, minute: otherMinute },
+        kind: level === "easy" ? "other-quarter" : "off-by-five",
+      },
+      {
+        time: { hour: hourSlip(time).hour, minute: otherMinute },
+        kind: "hour-and-minute",
+      },
+    ],
+    rng,
+  );
+}
 
-  const chosen: Option[] = [];
-  const taken = [time];
-  for (const candidate of candidates) {
-    if (chosen.length === 3) break;
-    if (taken.some((seen) => tooClose(seen, candidate.time))) continue;
-    taken.push(candidate.time);
-    chosen.push(candidate);
-  }
-
-  const fallbackKind: DistractorKind =
-    level === "easy" ? "other-quarter" : "off-by-five";
-  while (chosen.length < 3) {
-    const candidate = randomTime(level, rng);
-    if (taken.some((seen) => tooClose(seen, candidate))) continue;
-    taken.push(candidate);
-    chosen.push({ time: candidate, kind: fallbackKind });
-  }
-
-  const options: Option[] = [{ time, kind: "correct" }, ...chosen];
+function shuffleOptions(options: Option[], rng: Rng): Option[] {
   for (let i = options.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
     [options[i], options[j]] = [options[j], options[i]];

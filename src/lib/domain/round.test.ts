@@ -173,9 +173,9 @@ describe("buildRound", () => {
 
   it("draws Distractors only from the mistakes modelled for that Level", () => {
     const allowed: Record<Level, string[]> = {
-      easy: ["correct", "hour-slip", "swapped-hands", "other-quarter"],
-      medium: ["correct", "hour-slip", "swapped-hands", "off-by-five"],
-      hard: ["correct", "hour-slip", "swapped-hands", "off-by-five"],
+      easy: ["correct", "hour-slip", "hour-and-minute", "other-quarter"],
+      medium: ["correct", "hour-slip", "hour-and-minute", "off-by-five"],
+      hard: ["correct", "hour-slip", "hour-and-minute", "off-by-five"],
     };
     for (const level of levels) {
       for (const seed of seeds) {

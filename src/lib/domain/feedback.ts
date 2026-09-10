@@ -38,7 +38,21 @@ function nextHour(hour: number): number {
 export function explain(kind: DistractorKind | null, time: ClockTime): string {
   const answer = `The time is ${formatTime(time)}.`;
 
+  if (kind === "hour-and-minute") {
+    const minuteAdvice =
+      time.minute % 5 === 0
+        ? "Count by fives to where the long minute hand points."
+        : "Find the nearest number below the long minute hand, then count the small ticks past it one at a time.";
+    return (
+      `Check both hands. Read the hour from the short hand, using the number ` +
+      `it has reached or most recently passed. ${minuteAdvice} ${answer}`
+    );
+  }
+
   if (kind === "hour-slip") {
+    if (time.minute === 0) {
+      return `Look at the short hour hand. It points to ${time.hour}, so the hour is ${time.hour}. ${answer}`;
+    }
     return (
       `Look at the hour hand. It is between the ${time.hour} and the ` +
       `${nextHour(time.hour)}, and it has not reached the ${nextHour(time.hour)} ` +
