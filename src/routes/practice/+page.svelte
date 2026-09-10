@@ -19,7 +19,7 @@
   type Phase = 'setup' | 'asking' | 'checking' | 'results';
 
   const levels: { id: Level; name: string; blurb: string }[] = [
-    { id: 'easy', name: 'Easy', blurb: "o'clock, quarter past, half past, quarter to" },
+    { id: 'easy', name: 'Easy', blurb: 'every fifteen minutes: :00, :15, :30, and :45' },
     { id: 'medium', name: 'Medium', blurb: 'every five minutes' },
     { id: 'hard', name: 'Hard', blurb: 'any minute, and you type the answer' }
   ];
@@ -173,9 +173,9 @@
     </Header>
 
     {#if phase === 'setup'}
-      <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center py-10">
+      <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col py-10">
         <h1 class="text-[clamp(2rem,5vw,3.5rem)] leading-tight font-semibold tracking-tight">
-          Pick a level.
+          What level practice do you want?
         </h1>
 
         <div class="mt-8 grid gap-3 sm:grid-cols-3">
@@ -225,7 +225,7 @@
         </div>
       </section>
     {:else if question && (phase === 'asking' || phase === 'checking')}
-      <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col py-4">
+      <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col py-4 lg:pt-10">
         {#snippet correction()}
           {#if phase === 'checking' && question}
             <div class="mt-5 w-full text-center" role="status" aria-live="polite">
@@ -256,7 +256,7 @@
           <h1 class="text-center text-2xl font-semibold sm:text-3xl">What time is it?</h1>
 
           <!-- Keep feedback outside the centered grid so answers stay in place. -->
-          <div class="mx-auto mt-4 grid w-full max-w-4xl items-center gap-6 lg:grid-cols-2 lg:gap-10">
+          <div class="mx-auto mt-4 grid w-full max-w-4xl items-center gap-6 lg:mt-8 lg:grid-cols-2 lg:gap-10">
             <div class="mx-auto w-full max-w-[min(46vh,22rem)]">
               <ClockFace
                 time={question.time}
@@ -304,7 +304,7 @@
             <span class="text-orange tabular-nums">{formatTime(question.time)}</span>?
           </h1>
 
-          <div class="mx-auto mt-5 grid w-full max-w-3xl grid-cols-2 gap-4 md:grid-cols-4">
+          <div class="mx-auto mt-5 grid w-full max-w-3xl grid-cols-2 gap-4 md:grid-cols-4 lg:mt-8">
             {#each question.options ?? [] as option, position (optionLabel(option))}
               <button
                 type="button"
