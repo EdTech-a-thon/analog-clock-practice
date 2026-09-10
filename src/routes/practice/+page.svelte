@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { tick } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import Header from '$lib/components/Header.svelte';
@@ -11,6 +11,10 @@
   import type { ClockTime, DistractorKind, Level, Option, Round } from '$lib/domain/types';
   import {
     saveRound,
+    savePendingRound,
+    loadPendingRound,
+    clearPendingRound,
+    type PendingRound,
     unprintedPreviousRound,
     type AnsweredQuestion,
     type CompletedRound
@@ -55,6 +59,48 @@
   let advanceTimer: ReturnType<typeof setTimeout> | null = null;
   let inputProblem = $state<string | null>(null);
 
+  let pending = $state<PendingRound | null>(null);
+  let resumeDialog: HTMLDialogElement;
+
+  onMount(() => {
+    pending = loadPendingRound();
+    if (pending) resumeDialog.showModal();
+  });
+
+  function persist(): void {
+    if (round) savePendingRound({ round, index, answers });
+  }
+
+  function declineResume(): void {
+    clearPendingRound();
+    pending = null;
+    resumeDialog.close();
+  }
+
+  function resume(): void {
+    if (!pending) return;
+    round = pending.round;
+    level = round.level;
+    length = round.questions.length as RoundLength;
+    index = pending.index;
+    answers = pending.answers;
+    resetQuestion();
+    phase = 'asking';
+    if (answers.length > index) {
+      picked = answers[index].answer;
+      typedHour = picked ? String(picked.hour) : '';
+      typedMinute = picked ? String(picked.minute).padStart(2, '0') : '';
+      const current = round.questions[index];
+      wrongKind = picked && !answers[index].correct
+        ? current.options?.find(option => sameTime(option.time, picked!))?.kind as DistractorKind ?? classify(picked, current.time, level)
+        : null;
+      phase = 'checking';
+      if (answers[index].correct) advanceTimer = setTimeout(advance, 1100);
+    }
+    pending = null;
+    resumeDialog.close();
+  }
+
   let previous = $state<CompletedRound | null>(null);
 
   $effect(() => () => {
@@ -72,6 +118,7 @@
     answers = [];
     resetQuestion();
     phase = 'asking';
+    persist();
   }
 
   function resetQuestion(): void {
@@ -97,6 +144,7 @@
       }
     ];
     phase = 'checking';
+    persist();
 
     // Right answers keep the Round moving; wrong ones wait, so nobody skips
     // past the explanation without reading it.
@@ -148,6 +196,7 @@
     index += 1;
     resetQuestion();
     phase = 'asking';
+    persist();
   }
 
   function finish(): void {
@@ -158,6 +207,7 @@
       answers,
       printed: false
     });
+    clearPendingRound();
     previous = unprintedPreviousRound();
     phase = 'results';
   }
@@ -168,6 +218,26 @@
 <svelte:head>
   <title>Practice — Clock Literacy</title>
 </svelte:head>
+
+<dialog
+  bind:this={resumeDialog}
+  aria-labelledby="resume-title"
+  aria-describedby="resume-progress"
+  oncancel={() => { pending = null; }}
+  class="m-auto w-[calc(100%-2.5rem)] max-w-lg rounded-3xl border border-ink/15 bg-cream p-7 text-ink shadow-xl backdrop:bg-ink/45"
+>
+  {#if pending}
+    <h2 id="resume-title" class="text-2xl font-bold">Resume your round?</h2>
+    <p id="resume-progress" class="mt-4 text-lg text-ink/70">
+      {levels.find(option => option.id === pending?.round.level)?.name} level ·
+      {pending.answers.length} of {pending.round.questions.length} questions completed
+    </p>
+    <div class="mt-7 flex flex-wrap gap-3">
+      <button type="button" class="min-h-14 rounded-full bg-orange px-6 py-3 font-bold text-white focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-ink" onclick={resume}>Yes, resume</button>
+      <button type="button" class="min-h-14 rounded-full border-2 border-ink/20 px-6 py-3 font-bold focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-ink" onclick={declineResume}>No, start a new round</button>
+    </div>
+  {/if}
+</dialog>
 
 <main class="min-h-screen bg-cream px-5 py-5 text-ink sm:px-8 lg:px-12">
   <div class="mx-auto flex min-h-[calc(100vh-2.5rem)] max-w-7xl flex-col">

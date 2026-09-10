@@ -14,3 +14,8 @@ transport. Only the last two Rounds survive, so that a student who starts a new
 Round before printing can still recover the one before it. Shared classroom devices mean the stored name belongs to
 whoever used the machine last, which is why the report asks the student to
 confirm their name rather than assuming it.
+
+An unfinished Round is saved separately in localStorage, including its generated
+Questions and submitted answers. Returning to practice offers to resume it with
+its Level and completed Question count. Declining or finishing clears that saved
+Round; the last two completed Rounds remain available for Practice Reports.

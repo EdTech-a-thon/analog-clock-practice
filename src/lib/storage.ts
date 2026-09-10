@@ -1,4 +1,4 @@
-import type { ClockTime, Direction, Level } from "./domain/types";
+import type { ClockTime, Direction, Level, Round } from "./domain/types";
 
 export type AnsweredQuestion = {
   time: ClockTime;
@@ -87,4 +87,104 @@ export function saveName(name: string): void {
 
 export function score(round: CompletedRound): number {
   return round.answers.filter((answer) => answer.correct).length;
+}
+
+/** One unfinished Round, including the feedback currently on screen. */
+export type PendingRound = {
+  round: Round;
+  index: number;
+  answers: AnsweredQuestion[];
+};
+
+const PENDING_KEY = "clock-literacy:pending-round";
+
+export function savePendingRound(pending: PendingRound): void {
+  try {
+    localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+  } catch {
+    // Practice still works when browser storage is unavailable.
+  }
+}
+
+export function clearPendingRound(): void {
+  try {
+    localStorage.removeItem(PENDING_KEY);
+  } catch {
+    // Storage may be disabled.
+  }
+}
+
+export function loadPendingRound(): PendingRound | null {
+  try {
+    const pending = JSON.parse(localStorage.getItem(PENDING_KEY) ?? "null");
+    if (!pending || !["easy", "medium", "hard"].includes(pending.round?.level))
+      return null;
+    const { round, index, answers } = pending;
+    const isTime = (time: ClockTime) =>
+      time &&
+      Number.isInteger(time.hour) &&
+      time.hour >= 1 &&
+      time.hour <= 12 &&
+      Number.isInteger(time.minute) &&
+      time.minute >= 0 &&
+      time.minute <= 59;
+    if (
+      !Array.isArray(round.questions) ||
+      ![5, 10, 20].includes(round.questions.length) ||
+      !Number.isInteger(index) ||
+      index < 0 ||
+      index >= round.questions.length ||
+      !Array.isArray(answers) ||
+      (answers.length !== index && answers.length !== index + 1)
+    )
+      return null;
+    if (
+      !round.questions.every(
+        (question: Round["questions"][number]) =>
+          question &&
+          isTime(question.time) &&
+          ["clock-to-time", "time-to-clock"].includes(question.direction) &&
+          (question.options === null
+            ? round.level === "hard" && question.direction === "clock-to-time"
+            : Array.isArray(question.options) &&
+              question.options.length === 4 &&
+              question.options.every(
+                (option) =>
+                  option &&
+                  isTime(option.time) &&
+                  [
+                    "correct",
+                    "hour-and-minute",
+                    "hour-slip",
+                    "swapped-hands",
+                    "off-by-five",
+                    "off-by-tick",
+                    "other-quarter",
+                  ].includes(option.kind),
+              )),
+      )
+    )
+      return null;
+    if (
+      !answers.every((answer: AnsweredQuestion, position: number) => {
+        const question = round.questions[position];
+        return (
+          answer &&
+          isTime(answer.time) &&
+          answer.answer &&
+          isTime(answer.answer) &&
+          answer.time.hour === question.time.hour &&
+          answer.time.minute === question.time.minute &&
+          answer.direction === question.direction &&
+          answer.correct ===
+            (answer.answer.hour === question.time.hour &&
+              answer.answer.minute === question.time.minute)
+        );
+      })
+    )
+      return null;
+    return pending as PendingRound;
+  } catch {
+    return null;
+  }
 }
