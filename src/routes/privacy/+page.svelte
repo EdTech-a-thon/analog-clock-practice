@@ -1,11 +1,12 @@
 <script lang="ts">
   import Header from '$lib/components/Header.svelte';
+  import Seo from '$lib/components/Seo.svelte';
 </script>
 
-<svelte:head>
-  <title>Privacy — Clock Literacy</title>
-  <meta name="description" content="What Clock Literacy collects, what it doesn't, and why." />
-</svelte:head>
+<Seo
+  title="Privacy — Clock Literacy"
+  description="What Clock Literacy collects, what it doesn't, and why."
+/>
 
 <main class="min-h-screen bg-cream px-5 py-5 text-ink sm:px-8 lg:px-12">
   <div class="mx-auto max-w-7xl">
