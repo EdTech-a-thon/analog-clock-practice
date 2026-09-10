@@ -19,9 +19,21 @@
   type Phase = 'setup' | 'asking' | 'checking' | 'results';
 
   const levels: { id: Level; name: string; blurb: string }[] = [
-    { id: 'easy', name: 'Easy', blurb: 'every fifteen minutes: :00, :15, :30, and :45' },
-    { id: 'medium', name: 'Medium', blurb: 'every five minutes' },
-    { id: 'hard', name: 'Hard', blurb: 'any minute, and you type the answer' }
+    {
+      id: 'easy',
+      name: 'Easy',
+      blurb: 'Questions and answers use times ending in :00, :15, :30, or :45, like 2:00 and 2:15.'
+    },
+    {
+      id: 'medium',
+      name: 'Medium',
+      blurb: 'Questions and answers use times in 5-minute steps, like 2:05, 2:10, and 2:15.'
+    },
+    {
+      id: 'hard',
+      name: 'Hard',
+      blurb: 'Questions and answers can use any minute, like 2:07 or 2:43.'
+    }
   ];
   const lengths: RoundLength[] = [5, 10, 20];
 
