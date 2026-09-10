@@ -75,10 +75,10 @@
           for a tool you wish existed. We're here to help.
         </p>
         <a
-          href="mailto:directors@edtechathon.com?subject=Clock%20Literacy%20feedback"
+          href="mailto:support@teacher.dev?subject=Clock%20Literacy%20feedback"
           class="mt-5 inline-flex min-h-12 items-center rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-orange"
         >
-          Email directors@edtechathon.com
+          Email support@teacher.dev
         </a>
       </section>
     </div>

@@ -1,22 +1,8 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
 
-  const ticks = Array.from({ length: 60 }, (_, index) => ({
-    rotation: index * 6,
-    major: index % 5 === 0,
-  }));
-
-  const hourNumbers = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(
-    (number, index) => {
-      const angle = (index * 30 * Math.PI) / 180;
-
-      return {
-        number,
-        left: 50 + Math.sin(angle) * 42,
-        top: 50 - Math.cos(angle) * 42,
-      };
-    },
-  );
+  import Header from "$lib/components/Header.svelte";
+  import ClockFace from "$lib/components/ClockFace.svelte";
 </script>
 
 <svelte:head>
@@ -45,36 +31,7 @@
   <div
     class="relative mx-auto flex min-h-[calc(100vh-2.5rem)] max-w-7xl flex-col"
   >
-    <header class="flex items-center border-b border-ink/12 pb-5">
-      <a
-        href={resolve("/")}
-        class="group flex items-center gap-3 font-semibold tracking-tight"
-        aria-label="Clock Literacy home"
-      >
-        <span
-          class="grid size-9 place-items-center rounded-full bg-ink text-cream transition-transform group-hover:-rotate-6"
-        >
-          <svg viewBox="0 0 24 24" class="size-5" aria-hidden="true">
-            <circle
-              cx="12"
-              cy="12"
-              r="8"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-            />
-            <path
-              d="M12 7v5l3.5 2"
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="1.8"
-            />
-          </svg>
-        </span>
-        <span>Clock Literacy</span>
-      </a>
-    </header>
+    <Header />
 
     <section
       class="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[1.02fr_0.98fr] lg:py-10"
@@ -120,43 +77,9 @@
         </div>
 
         <div
-          class="relative aspect-square rounded-full bg-[#fffdf7] p-[5%] shadow-[0_30px_80px_rgba(23,37,44,0.14),inset_0_0_0_3px_rgba(23,37,44,0.12)]"
+          class="relative rounded-full shadow-[0_24px_60px_rgba(0,0,0,0.18)]"
         >
-          <div
-            class="relative h-full w-full rounded-full border-[3px] border-ink/85"
-          >
-            {#each ticks as tick (tick.rotation)}
-              <span
-                class="absolute top-0 left-1/2 h-1/2 w-px origin-bottom"
-                style:transform={`translateX(-50%) rotate(${tick.rotation}deg)`}
-              >
-                <span
-                  class:h-3={tick.major}
-                  class:h-1.5={!tick.major}
-                  class="block w-[2px] bg-ink/65"
-                ></span>
-              </span>
-            {/each}
-
-            {#each hourNumbers as hour (hour.number)}
-              <span
-                class="absolute top-1/2 left-1/2 grid size-10 place-items-center text-xl font-semibold sm:text-2xl"
-                style:left={`${hour.left}%`}
-                style:top={`${hour.top}%`}
-                style:transform="translate(-50%, -50%)">{hour.number}</span
-              >
-            {/each}
-
-            <span
-              class="absolute top-1/2 left-1/2 h-[29%] w-2 origin-bottom -translate-x-1/2 -translate-y-full rotate-[300deg] rounded-full bg-ink"
-            ></span>
-            <span
-              class="absolute top-1/2 left-1/2 h-[38%] w-1.5 origin-bottom -translate-x-1/2 -translate-y-full rotate-[60deg] rounded-full bg-orange"
-            ></span>
-            <span
-              class="absolute top-1/2 left-1/2 size-5 -translate-1/2 rounded-full border-[5px] border-white bg-ink shadow-sm"
-            ></span>
-          </div>
+          <ClockFace time={{ hour: 10, minute: 10 }} />
         </div>
       </div>
     </section>
@@ -177,57 +100,13 @@
       </div>
 
       <ol class="mt-10 grid gap-4 md:grid-cols-3">
-        {#each [{ level: "Easy", detail: "The clock only shows quarter hours.", minute: 0, hour: 60 }, { level: "Medium", detail: "The clock only shows times on five-minute marks.", minute: 60, hour: 105 }, { level: "Hard", detail: "The clock can show any time.", minute: 204, hour: 66 }] as item (item.level)}
+        {#each [{ level: "Easy", detail: "The clock only shows quarter hours.", minute: 0, hour: 2 }, { level: "Medium", detail: "The clock only shows times on five-minute marks.", minute: 30, hour: 3 }, { level: "Hard", detail: "The clock can show any time.", minute: 12, hour: 2 }] as item (item.level)}
           <li
             class="relative flex items-center gap-5 rounded-3xl border border-ink/12 bg-white/45 p-5 sm:p-6 md:flex-col md:text-center"
           >
-            <svg
-              viewBox="0 0 120 120"
-              class="size-24 shrink-0 sm:size-28"
-              aria-hidden="true"
-            >
-              <circle
-                cx="60"
-                cy="60"
-                r="55"
-                fill="#fffdf7"
-                stroke="#17252c"
-                stroke-width="2"
-              />
-              {#each ticks.filter((tick) => tick.major) as tick (tick.rotation)}
-                <line
-                  x1="60"
-                  y1="9"
-                  x2="60"
-                  y2="15"
-                  stroke="#17252c"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  transform={`rotate(${tick.rotation} 60 60)`}
-                />
-              {/each}
-              <line
-                x1="60"
-                y1="60"
-                x2="60"
-                y2="32"
-                stroke="#17252c"
-                stroke-width="5"
-                stroke-linecap="round"
-                transform={`rotate(${item.hour} 60 60)`}
-              />
-              <line
-                x1="60"
-                y1="60"
-                x2="60"
-                y2="18"
-                stroke="#f26b3a"
-                stroke-width="3"
-                stroke-linecap="round"
-                transform={`rotate(${item.minute} 60 60)`}
-              />
-              <circle cx="60" cy="60" r="5" fill="#17252c" />
-            </svg>
+            <div class="size-24 shrink-0 sm:size-28" aria-hidden="true">
+              <ClockFace time={{ hour: item.hour, minute: item.minute }} />
+            </div>
             <div>
               <h3 class="text-lg font-bold">{item.level}</h3>
               <p class="mt-1 text-sm text-ink/55">{item.detail}</p>

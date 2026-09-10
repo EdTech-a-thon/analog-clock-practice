@@ -39,9 +39,9 @@
         <p class="mt-5 text-sm leading-relaxed text-ink/70">
           Questions or concerns? Email
           <a
-            href="mailto:directors@edtechathon.com?subject=Clock%20Literacy%20privacy"
+            href="mailto:support@teacher.dev?subject=Clock%20Literacy%20privacy"
             class="font-semibold text-orange underline-offset-4 hover:underline"
-          >directors@edtechathon.com</a>.
+          >support@teacher.dev</a>.
         </p>
       </section>
     </div>

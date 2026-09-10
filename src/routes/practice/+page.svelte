@@ -2,6 +2,7 @@
   import { tick } from 'svelte';
   import { resolve } from '$app/paths';
   import { page } from '$app/state';
+  import Header from '$lib/components/Header.svelte';
   import ClockFace from '$lib/components/ClockFace.svelte';
   import TimeInput from '$lib/components/TimeInput.svelte';
   import { buildRound, type RoundLength } from '$lib/domain/round';
@@ -172,19 +173,18 @@
   <title>Practice — Clock Literacy</title>
 </svelte:head>
 
-<main class="min-h-screen bg-cream px-5 py-6 text-ink sm:px-8">
-  <div class="mx-auto flex min-h-[calc(100vh-3rem)] max-w-5xl flex-col">
-    <header class="flex items-center justify-between border-b border-ink/12 pb-4">
-      <a href={resolve('/')} class="font-semibold tracking-tight">Clock Literacy</a>
+<main class="min-h-screen bg-cream px-5 py-5 text-ink sm:px-8 lg:px-12">
+  <div class="mx-auto flex min-h-[calc(100vh-2.5rem)] max-w-7xl flex-col">
+    <Header>
       {#if phase === 'asking' || phase === 'checking'}
         <p class="text-sm font-semibold text-ink/60 tabular-nums">
           {index + 1} of {round?.questions.length} · {rightSoFar} right
         </p>
       {/if}
-    </header>
+    </Header>
 
     {#if phase === 'setup'}
-      <section class="flex flex-1 flex-col justify-center py-10">
+      <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center py-10">
         <h1 class="text-[clamp(2rem,5vw,3.5rem)] leading-tight font-semibold tracking-tight">
           Pick a level.
         </h1>
@@ -236,7 +236,7 @@
         </div>
       </section>
     {:else if question && (phase === 'asking' || phase === 'checking')}
-      <section class="flex flex-1 flex-col justify-center py-4">
+      <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center py-4">
         {#snippet correction()}
           {#if phase === 'checking' && question}
             <div class="mt-5 w-full text-center" role="status" aria-live="polite">
@@ -352,7 +352,7 @@
         {/if}
       </section>
     {:else if phase === 'results'}
-      <section class="flex flex-1 flex-col justify-center py-10">
+      <section class="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center py-10">
         <h1 class="text-[clamp(2rem,5vw,3.5rem)] leading-tight font-semibold tracking-tight">
           {rightSoFar} out of {answers.length}
         </h1>
