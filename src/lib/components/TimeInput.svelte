@@ -8,6 +8,8 @@
 
   let { hour = $bindable(), minute = $bindable(), disabled = false, onsubmit }: Props = $props();
 
+  const canSubmit = $derived(!disabled && hour.trim() !== '' && /^\d{2}$/.test(minute));
+
   // Two boxes rather than one: no punctuation to get wrong, and a number pad on
   // tablets and phones.
   const field =
@@ -20,7 +22,7 @@
   class="flex items-center justify-center gap-3"
   onsubmit={(event) => {
     event.preventDefault();
-    onsubmit();
+    if (canSubmit) onsubmit();
   }}
 >
   <label class="sr-only" for="hour-input">Hour</label>
@@ -53,7 +55,7 @@
     class="ml-2 min-h-14 rounded-full bg-ink px-6 py-3 text-base font-bold text-white
            transition hover:bg-orange focus-visible:outline-3 focus-visible:outline-offset-4
            focus-visible:outline-orange disabled:opacity-40"
-    disabled={disabled || hour.trim() === '' || minute.trim() === ''}
+    disabled={!canSubmit}
   >
     Check
   </button>

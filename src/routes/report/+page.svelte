@@ -3,6 +3,7 @@
   import { resolve } from '$app/paths';
   import ClockFace from '$lib/components/ClockFace.svelte';
   import { formatTime } from '$lib/domain/time';
+  import type { Direction, Level } from '$lib/domain/types';
   import {
     latestRound,
     loadName,
@@ -32,8 +33,14 @@
   });
 
   const round = $derived(showing === 'earlier' ? earlier : current);
+  const correctAnswers = $derived((round?.answers ?? []).filter((answer) => answer.correct));
   const misses = $derived((round?.answers ?? []).filter((answer) => !answer.correct));
   const shown = $derived(misses.slice(0, MAX_SHOWN));
+
+  function answerFormat(level: Level, direction: Direction): string {
+    if (direction === 'time-to-clock') return 'Multiple choice (clock)';
+    return level === 'hard' ? 'Typed input' : 'Multiple choice (time)';
+  }
 
   const finishedOn = $derived(
     round
@@ -159,6 +166,20 @@
           {score(round)} <span class="text-ink/45">out of {round.answers.length}</span>
         </p>
 
+        {#if correctAnswers.length > 0}
+          <section class="mt-6 break-inside-avoid">
+            <h2 class="text-base font-bold tracking-wide">Questions answered correctly</h2>
+            <ul class="mt-2 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2 print:grid-cols-2">
+              {#each correctAnswers as answer (answer.time.hour + ':' + answer.time.minute)}
+                <li>
+                  <span class="font-bold tabular-nums">{formatTime(answer.time)}</span>
+                  <span class="text-ink/70">— {answerFormat(round.level, answer.direction)}</span>
+                </li>
+              {/each}
+            </ul>
+          </section>
+        {/if}
+
         {#if shown.length > 0}
           <h2 class="mt-8 text-base font-bold tracking-wide">Questions to look at again</h2>
           <div class="mt-4 grid grid-cols-3 gap-6">
@@ -167,6 +188,9 @@
                 <ClockFace time={miss.time} plain />
                 <p class="mt-2 text-center text-sm font-bold tabular-nums">
                   {formatTime(miss.time)}
+                </p>
+                <p class="text-center text-xs text-ink/70">
+                  {answerFormat(round.level, miss.direction)}
                 </p>
                 {#if miss.answer}
                   <p class="text-center text-xs text-ink/60 tabular-nums">
