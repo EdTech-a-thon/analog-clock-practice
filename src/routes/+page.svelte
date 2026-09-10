@@ -84,15 +84,18 @@
     >
       <div class="relative z-10 max-w-2xl">
         <h1
-          class="max-w-3xl text-[clamp(3.5rem,7vw,6.7rem)] leading-[0.92] font-semibold tracking-[-0.045em] text-ink"
+          class="max-w-3xl text-[clamp(2.8rem,11.5vw,3.5rem)] leading-[0.94] font-semibold tracking-[-0.04em] text-ink sm:text-[clamp(3.5rem,7vw,6.7rem)] sm:leading-[0.92] sm:tracking-[-0.045em]"
         >
-          Practice Reading an<br /> Analog Clock.
+          <span class="block">Practice Reading</span>
+          <span class="block">an Analog Clock.</span>
         </h1>
-        <p class="mt-8 max-w-lg text-lg leading-relaxed text-ink/68 sm:text-xl">
+        <p
+          class="mt-5 max-w-lg text-lg leading-relaxed text-ink/68 sm:mt-8 sm:text-xl"
+        >
           Choose a level and get started.
         </p>
 
-        <div class="mt-9">
+        <div class="mt-5 sm:mt-9">
           <a
             href={resolve(practiceHref)}
             class="group inline-flex min-h-14 items-center gap-4 rounded-full bg-ink px-7 py-4 text-base font-bold text-white shadow-[0_12px_30px_rgba(23,37,44,0.18)] transition hover:-translate-y-0.5 hover:bg-orange focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-orange"
