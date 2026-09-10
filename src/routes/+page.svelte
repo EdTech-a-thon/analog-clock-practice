@@ -3,15 +3,13 @@
 
   import Header from "$lib/components/Header.svelte";
   import ClockFace from "$lib/components/ClockFace.svelte";
+  import Seo from "$lib/components/Seo.svelte";
 </script>
 
-<svelte:head>
-  <title>Practice Reading an Analog Clock — Clock Literacy</title>
-  <meta
-    name="description"
-    content="Build confidence reading analog clocks with focused, self-paced practice."
-  />
-</svelte:head>
+<Seo
+  title="Practice Reading an Analog Clock — Clock Literacy"
+  description="Build confidence reading analog clocks with focused, self-paced practice."
+/>
 
 <main
   class="relative min-h-screen overflow-hidden bg-cream px-5 py-5 sm:px-8 lg:px-12"

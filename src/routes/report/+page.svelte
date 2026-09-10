@@ -3,6 +3,7 @@
   import { resolve } from '$app/paths';
   import ClockFace from '$lib/components/ClockFace.svelte';
   import Header from '$lib/components/Header.svelte';
+  import Seo from '$lib/components/Seo.svelte';
   import { formatTime } from '$lib/domain/time';
   import type { Direction, Level } from '$lib/domain/types';
   import {
@@ -69,9 +70,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>Practice report — Clock Literacy</title>
-</svelte:head>
+<Seo title="Practice report — Clock Literacy" />
 
 <main class="min-h-screen bg-cream px-5 py-5 text-ink sm:px-8 lg:px-12 print:bg-white print:p-0">
   <div class="no-print mx-auto mb-6 max-w-7xl">

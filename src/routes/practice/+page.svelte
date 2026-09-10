@@ -3,6 +3,7 @@
   import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import Header from '$lib/components/Header.svelte';
+  import Seo from '$lib/components/Seo.svelte';
   import ClockFace from '$lib/components/ClockFace.svelte';
   import TimeInput from '$lib/components/TimeInput.svelte';
   import { buildRound, type RoundLength } from '$lib/domain/round';
@@ -215,9 +216,7 @@
   const optionLabel = (option: Option) => formatTime(option.time);
 </script>
 
-<svelte:head>
-  <title>Practice — Clock Literacy</title>
-</svelte:head>
+<Seo title="Practice — Clock Literacy" />
 
 <dialog
   bind:this={resumeDialog}

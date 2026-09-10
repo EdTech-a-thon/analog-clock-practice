@@ -1,15 +1,13 @@
 <script lang="ts">
   import { base } from '$app/paths';
   import Header from '$lib/components/Header.svelte';
+  import Seo from '$lib/components/Seo.svelte';
 </script>
 
-<svelte:head>
-  <title>About — Clock Literacy</title>
-  <meta
-    name="description"
-    content="Learn about Clock Literacy and the EdTech-a-thon community that built it."
-  />
-</svelte:head>
+<Seo
+  title="About — Clock Literacy"
+  description="Learn about Clock Literacy and the EdTech-a-thon community that built it."
+/>
 
 <main class="min-h-screen bg-cream px-5 py-5 text-ink sm:px-8 lg:px-12">
   <div class="mx-auto max-w-7xl">
