@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { resolve } from '$app/paths';
+  import Header from '$lib/components/Header.svelte';
 </script>
 
 <svelte:head>
@@ -7,16 +7,11 @@
   <meta name="description" content="What Clock Literacy collects, what it doesn't, and why." />
 </svelte:head>
 
-<main class="min-h-screen bg-cream px-5 py-6 text-ink sm:px-8">
-  <div class="mx-auto max-w-3xl">
-    <header class="flex items-center justify-between border-b border-ink/12 pb-4">
-      <a href={resolve('/')} class="font-semibold tracking-tight">Clock Literacy</a>
-      <a href={resolve('/')} class="text-sm font-semibold text-ink/60 hover:text-ink">
-        ← Back home
-      </a>
-    </header>
+<main class="min-h-screen bg-cream px-5 py-5 text-ink sm:px-8 lg:px-12">
+  <div class="mx-auto max-w-7xl">
+    <Header />
 
-    <div class="py-10">
+    <div class="mx-auto max-w-3xl py-10">
       <h1 class="text-4xl font-semibold tracking-[-0.035em]">Privacy</h1>
       <p class="mt-2 text-ink/60">What we collect, what we don't, and why.</p>
 
