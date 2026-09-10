@@ -1,9 +1,6 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
 
-  // The practice route is owned by the practice-flow feature and may land independently.
-  const practiceHref = "/practice" as "/";
-
   const ticks = Array.from({ length: 60 }, (_, index) => ({
     rotation: index * 6,
     major: index % 5 === 0,
@@ -97,7 +94,7 @@
 
         <div class="mt-5 sm:mt-9">
           <a
-            href={resolve(practiceHref)}
+            href={resolve("/practice")}
             class="group inline-flex min-h-14 items-center gap-4 rounded-full bg-ink px-7 py-4 text-base font-bold text-white shadow-[0_12px_30px_rgba(23,37,44,0.18)] transition hover:-translate-y-0.5 hover:bg-orange focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-orange"
           >
             Start practicing
