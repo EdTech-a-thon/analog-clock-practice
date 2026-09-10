@@ -398,7 +398,7 @@
             <span class="text-orange tabular-nums">{formatTime(question.time)}</span>?
           </h1>
 
-          <div class="mx-auto mt-5 grid w-full max-w-3xl grid-cols-2 gap-4 md:grid-cols-4 lg:mt-8">
+          <div class="mx-auto mt-5 grid w-full max-w-2xl grid-cols-2 gap-4 lg:mt-8 xl:max-w-4xl xl:grid-cols-4">
             {#each question.options ?? [] as option, position (optionLabel(option))}
               <button
                 type="button"
