@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import { resolve } from '$app/paths';
+  import { browser } from '$app/environment';
   import { page } from '$app/state';
   import Header from '$lib/components/Header.svelte';
   import Seo from '$lib/components/Seo.svelte';
@@ -42,7 +43,11 @@
   ];
   const lengths: RoundLength[] = [5, 10, 20];
 
-  const requested = page.url.searchParams.get('level');
+  // A shared link like /practice?level=hard preselects a Level. The pages are
+  // prerendered, and prerendering forbids reading searchParams because there is
+  // no request, so this resolves during hydration instead. Setup is the first
+  // screen either way, so the preselection still lands before anyone can act.
+  const requested = browser ? page.url.searchParams.get('level') : null;
   const preset = levels.find((level) => level.id === requested)?.id;
 
   let phase = $state<Phase>('setup');
