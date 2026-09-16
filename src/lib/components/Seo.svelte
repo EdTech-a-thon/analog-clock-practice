@@ -7,11 +7,13 @@
   let { title, description }: Props = $props();
 
   /**
-   * Absolute URLs, built from the request origin so the same code works on
-   * localhost, previews, and production. Link unfurlers (Instagram, iMessage,
-   * Slack) reject relative og:image paths, and without an og:image they fall
-   * back to whatever <img> they find on the page — here, the EdTech-a-thon
-   * logo in the footer.
+   * Absolute URLs. Link unfurlers (Instagram, iMessage, Slack) reject relative
+   * og:image paths, and without an og:image they fall back to whatever <img>
+   * they find on the page — here, the EdTech-a-thon logo in the footer.
+   *
+   * The pages are prerendered, so `page.url.origin` is the fixed
+   * `kit.prerender.origin` from svelte.config.js rather than a request origin.
+   * Change it there, not here.
    */
   const canonical = $derived(new URL(page.url.pathname, page.url.origin).href);
   const image = $derived(new URL(`${base}/og-image.png`, page.url.origin).href);
